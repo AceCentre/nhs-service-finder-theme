@@ -1,0 +1,18 @@
+	<header id="masthead" class="site-header">
+		<div class="top-bar">
+			<div class="site-link">
+				<a href="{{ .Site.Data.header.link_url }}" target="_blank">{{ .Site.Data.header.link_title }}</a>
+			</div>
+			<div class="social-media">
+				<ul class="social-links">
+					{{ partial "components/social-media.html" }}
+				</ul>
+			</div>
+		</div>
+		<div class="main-logo">
+			<a href="{{ "/" | absURL }}" rel="home">
+				<img src="{{ .Site.Data.header.image_location | relURL }}" alt="{{ .Site.Data.header.image_alt }}">
+			</a>
+		</div>
+		{{ partial "menu.html" . }}
+	</header>

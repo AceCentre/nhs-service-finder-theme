@@ -1,0 +1,15 @@
+{{ partial "head.html" . }}
+{{ partial "header.html" . }}
+  <section>
+	  <main class="inner-container">
+		  <div class="full-width-content">
+			  <div class="wrapper">
+				  <div class="content text-content{{ range .Params.styles }} {{ . }}{{ end }}">
+					  {{ partial "content.html" . }}
+				  </div>
+			  </div>
+		  </div>
+	  </main>
+  </section>
+{{ partial "footer.html" . }}
+{{ partial "foot.html" . }}

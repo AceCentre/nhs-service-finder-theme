@@ -1,0 +1,21 @@
+# theme.toml template for a Hugo theme
+# See https://github.com/gohugoio/hugoThemes#themetoml for an example
+
+name = "Hugo Acecentre Theme"
+license = "MIT"
+licenselink = "https://github.com/AceCentre/hugo-acecentre-theme/blob/master/LICENSE"
+description = ""
+homepage = "https://github.com/AceCentre/hugo-acecentre-theme/"
+tags = []
+features = []
+min_version = "0.41"
+
+[author]
+  name = "Hossein Amin"
+  homepage = ""
+
+# If porting an existing theme
+[original]
+  name = "aac-theme"
+  homepage = "https://github.com/AceCentre/aac-theme/"
+  repo = "https://github.com/AceCentre/aac-theme/"

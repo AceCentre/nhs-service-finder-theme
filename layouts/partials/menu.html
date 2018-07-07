@@ -1,0 +1,24 @@
+{{ with .Site.Data.navigation }}
+  {{if gt (len .) 0}}
+  <nav class="main-menu top-bar">
+    <ul id="menu-main-menu" class="dropdown menu desktop-menu" data-dropdown-menu role="menubar">
+  {{end}}
+  {{ range . }}
+    <li class="menu-item menu-item-has-children {{ with .subnav }}is-dropdown-submenu-parent opens-right{{ end }}">
+      <a {{ cond (eq .url $.Page.URL) "class=\"active\"" "" }} href="{{ .url | absURL }}">{{ .title }}</a>
+      {{ with .subnav }}
+      {{ if gt (len .) 0 }}<ul class="dropdown menu vertical" data-toggle>{{ end }}
+      {{ range . }}
+        <li>
+          <a {{ cond (eq .url $.Page.URL) "class=\"active\"" "" }} href="{{ .url | absURL }}">{{ .title }}</a>
+        </li>
+      {{ end }}
+      {{ if gt (len .) 0 }}</ul>{{ end }}
+      {{ end }}
+    </li>
+  {{ end }}
+  {{ if gt (len .) 0 }}
+    </ul>
+  </nav>
+  {{ end }}
+{{ end }}

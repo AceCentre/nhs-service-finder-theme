@@ -1,0 +1,20 @@
+{
+  "name": "hugo-acecentre-theme",
+  "description": "Startup hugo theme for AceCentre",
+  "main": "index.js",
+  "authors": [
+    "Hossein Amin <hossein@aminbros.com>"
+  ],
+  "license": "ISC",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "static/components/"
+  ],
+  "dependencies": {
+    "foundation-sites": "^6.4.3",
+    "jquery": "^3.3.1",
+    "fontawesome": "^5.1.0"
+  }
+}

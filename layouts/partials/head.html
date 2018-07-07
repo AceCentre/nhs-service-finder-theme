@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	  <meta name="robots" content="noindex,follow,noodp">
+    <title>{{ with .Params.seotitle }}{{ . }}{{ else }}{{ with .Title }}{{ . }}{{ else }}{{ .Site.Title }}{{ end }}{{ end }}</title>
+    <meta name="author" content="{{ .Site.Author.name }}">
+    <meta name="keywords" content="{{ with .Keywords }}{{ delimit . ", " }}{{ end }}{{ if .Site.Params.keywords }}, {{ delimit .Site.Params.keywords ", " }}{{ end }}">
+    <meta name="description" content="{{ if .Description }}{{ .Description }}{{ else if .IsPage }}{{ .Summary }}{{ else }}{{ .Site.Params.description }}{{ end }}">
+    {{ with .Site.Params.favicon_32 }}<link rel="icon" href="{{ . | relURL }}" sizes="32x32" />{{ end }}
+    {{ with .Site.Params.favicon_192 }}<link rel="icon" href="{{ . | relURL }}" sizes="192x192" />{{ end }}
+    {{ with .Site.Params.favicon_180 }}<link rel="apple-touch-icon-precomposed" href="{{ . | relURL }}" />{{ end }}
+    {{ with .Site.Params.favicon_270 }}<meta name="msapplication-TileImage" content="{{ . | relURL }}" />{{ end }}
+    <!-- MAIN STYELSHEET -->
+    <link rel="stylesheet" type="text/css" href="/css/{{ cond (eq (getenv "IS_PRODUCTION") "1") "style.min.css" "style.css" }}" />
+    {{ partial "components/google-analytics.html" . }}
+  </head>
+  <body>

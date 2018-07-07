@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	  <meta name="robots" content="noindex,follow,noodp">
+    <title>404: Page not found</title>
+    <meta name="author" content="{{ .Site.Author.name }}">
+    {{ with .Site.Params.favicon_32 }}<link rel="icon" href="{{ . | relURL }}" sizes="32x32" />{{ end }}
+    {{ with .Site.Params.favicon_192 }}<link rel="icon" href="{{ . | relURL }}" sizes="192x192" />{{ end }}
+    {{ with .Site.Params.favicon_180 }}<link rel="apple-touch-icon-precomposed" href="{{ . | relURL }}" />{{ end }}
+    {{ with .Site.Params.favicon_270 }}<meta name="msapplication-TileImage" content="{{ . | relURL }}" />{{ end }}
+    <!-- MAIN STYELSHEET -->
+    <link rel="stylesheet" type="text/css" href="/css/{{ cond (eq (getenv "IS_PRODUCTION") "1") "style.min.css" "style.css" }}" />
+    {{ partial "components/google-analytics.html" . }}
+  </head>
+  <body>
+{{ partial "header.html" . }}
+  <section>
+	  <main class="inner-container">
+		  <header class="title">
+			  <div class="wrapper">
+				  <div class="content">
+					  <h1>Page not found</h1>
+				  </div>
+			  </div>
+		  </header>
+		  <div class="full-width-content">
+			  <div class="wrapper">
+				  <div class="content text-content{{ range .Params.styles }} {{ . }}{{ end }}">
+            <p>We couldn't find that page, it may be misspelled or removed.</p>
+            <ul>
+              <li><a href="{{ .Site.BaseURL }}">Home</a></li>
+              <li><a href="javascript:history.back()">back</a></li>
+            </ul>
+				  </div>
+			  </div>
+		  </div>
+	  </main>
+  </section>
+{{ partial "footer.html" . }}
+{{ partial "foot.html" . }}
+  
