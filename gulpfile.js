@@ -10,10 +10,12 @@ const rename = require('gulp-rename');
 const path = require('path');
 
 let webpackConfig = {
+  context: path.resolve(__dirname, "static/js"),
   resolve: {
     alias: {
       'jquery': path.resolve(__dirname, 'static/components/jquery/dist/jquery.js'),
-      'foundation-sites': path.resolve(__dirname, 'static/components/foundation-sites/js/entries/foundation.js')
+      'foundation-sites': path.resolve(__dirname, 'static/components/foundation-sites/js/entries/foundation.js'),
+      'lodash': path.resolve(__dirname, 'static/components/lodash/dist/lodash.min.js'),
     },
   },
   module: {

@@ -1,6 +1,6 @@
 {{ .Content }}
-{{ with .Params.mainimage }}
-	<div class="main-image">
-		<img src="{{ .location | relURL }}" alt="{{ .alt }}">
-	</div>
-{{ end }}
+{{- with .Params.mainimage -}}
+  <div class="main-image">
+    <img src="{{ .location | relURL }}" alt="{{ .alt }}">
+  </div>
+{{- end -}}

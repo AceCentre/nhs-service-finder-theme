@@ -1,0 +1,79 @@
+// startup
+$primary-color: #699CC6;
+
+$form-font-size: 1em;
+$form-text-padding: 5px;
+
+#ccg-lookup-form {
+  padding: 15px 10px;
+  text-align: center;
+}
+#ccg-service-input {
+  width: auto;
+  font-size: $form-font-size;
+  padding: $form-text-padding;
+  background: none;
+  font-weight: bold;
+  margin: 0px 10px;
+  @media (max-width: 500px) {
+    display: block;
+    margin: 10px auto;
+  }
+}
+#ccg-postcode-input {
+  font-size: $form-font-size;
+  padding: $form-text-padding;
+  margin: 0px 10px;
+  width: 50%;
+  max-width: 300px
+}
+
+.btn {
+  background: #3498db;
+  background-image: -webkit-linear-gradient(top, #3498db, #2980b9);
+  background-image: -moz-linear-gradient(top, #3498db, #2980b9);
+  background-image: -ms-linear-gradient(top, #3498db, #2980b9);
+  background-image: -o-linear-gradient(top, #3498db, #2980b9);
+  background-image: linear-gradient(to bottom, #3498db, #2980b9);
+  -webkit-border-radius: 28;
+  -moz-border-radius: 28;
+  border-radius: 28px;
+  color: #ffffff;
+  padding: 10px 20px 10px 20px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: #3cb0fd;
+  background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: -moz-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: -ms-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
+  text-decoration: none;
+}
+
+#ccg-lookup-btn {
+  font-size: $form-font-size;
+  padding: $form-text-padding;
+  color: $primary-color;
+  font-weight: bold;
+  background: none;
+  border-color: transparent;
+  cursor: pointer;
+  margin: 0px 10px;
+}
+
+#ccg-lookup-result {
+  margin: 10px auto 15px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+  &.last {
+    border-bottom: none;
+    margin-bottom: 0px;
+  }
+  .infolist {
+    text-align: left;
+  }
+}
+

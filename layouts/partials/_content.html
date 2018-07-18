@@ -1,0 +1,9 @@
+{{- if isset .Site.Params "content_partial_by_type" -}}
+  {{- if isset .Site.Params.content_partial_by_type .Type -}} 
+    {{- partial (index .Site.Params.content_partial_by_type .Type) . -}}
+  {{- end -}}
+{{- else if and (isset .Params "content_partial") -}}
+  {{- partial .Params.content_partial . -}}
+{{- else -}}
+  {{- partial "content.html" . -}}
+{{- end -}}
