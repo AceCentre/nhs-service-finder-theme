@@ -10,12 +10,11 @@ const rename = require('gulp-rename');
 const path = require('path');
 
 let webpackConfig = {
-  context: path.resolve(__dirname, "static/js"),
   resolve: {
+    modules: [ 'node_modules' ],
     alias: {
       'jquery': path.resolve(__dirname, 'static/components/jquery/dist/jquery.js'),
-      'foundation-sites': path.resolve(__dirname, 'static/components/foundation-sites/js/entries/foundation.js'),
-      'lodash': path.resolve(__dirname, 'static/components/lodash/dist/lodash.min.js'),
+      'foundation-sites': path.resolve(__dirname, 'static/components/foundation-sites/js/entries/foundation.js')
     },
   },
   module: {
@@ -36,14 +35,14 @@ let webpackConfig = {
 };
  
 gulp.task('script-lint', function () {
-    return gulp.src(['static/js/**/*.js'])
+    return gulp.src(['static/jsx/**/*.js'])
         .pipe(eslint())
         .pipe(eslint.format())
         .pipe(eslint.failAfterError());
 });
 
 gulp.task('build-script-prod', function () {
-  return gulp.src(['static/js/main.js'])
+  return gulp.src(['static/jsx/main.js'])
     .pipe(webpackst(Object.assign({}, webpackConfig, {
       output: {
         filename: '[name].min.js',
@@ -64,7 +63,7 @@ gulp.task('build-script-prod', function () {
 });
 
 gulp.task('build-script-dev', function () {
-  return gulp.src(['static/js/main.js'])
+  return gulp.src(['static/jsx/main.js'])
     .pipe(webpackst(Object.assign({}, webpackConfig, {
       output: {
         filename: '[name].js',
@@ -100,7 +99,7 @@ gulp.task('sass-prod', function () {
 });
 
 gulp.task('build-script-dev:watch', function () {
-  return gulp.src(['static/js/main.js'])
+  return gulp.src(['static/jsx/main.js'])
     .pipe(webpackst(Object.assign({}, webpackConfig, {
       watch: true,
       output: {

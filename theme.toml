@@ -10,6 +10,8 @@ tags = []
 features = []
 min_version = "0.41"
 
+ignoreFiles = [ "^\\.#", "\\.js$"]
+
 [author]
   name = "Hossein Amin"
   homepage = ""

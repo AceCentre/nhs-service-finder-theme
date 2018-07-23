@@ -1,0 +1,5 @@
+{{- if and (isset .Params "rawdata_partial") -}}
+  {{- partial .Params.rawdata_partial . -}}
+{{- else -}}
+"No data!"
+{{- end -}}

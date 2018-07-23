@@ -33,5 +33,11 @@
   "bugs": {
     "url": "https://github.com/AceCentre/hugo-acecentre-theme/issues"
   },
-  "homepage": "https://github.com/AceCentre/hugo-acecentre-theme#readme"
+  "homepage": "https://github.com/AceCentre/hugo-acecentre-theme#readme",
+  "dependencies": {
+    "d3": "^5.5.0",
+    "lodash": "^4.17.10",
+    "tippy.js": "^2.5.4",
+    "topojson-client": "^3.0.0"
+  }
 }
