@@ -51,7 +51,7 @@ gulp.task('build-script-prod', function () {
       devtool: 'source-map',
       plugins: [
         new webpack.DefinePlugin({
-          'process.env.NODE_ENV': JSON.stringify('production')
+          'process.env.IS_PRODUCTION': JSON.stringify(true)
         }),
         new UglifyJsPlugin({
           exclude: /min\.js$/,
@@ -72,7 +72,7 @@ gulp.task('build-script-dev', function () {
       devtool: 'source-map',
       plugins: [
         new webpack.DefinePlugin({
-          'process.env.NODE_ENV': JSON.stringify('development')
+          'process.env.IS_PRODUCTION': JSON.stringify(false)
         }),
       ],
     }), webpack))
@@ -109,7 +109,7 @@ gulp.task('build-script-dev:watch', function () {
       devtool: 'source-map',
       plugins: [
         new webpack.DefinePlugin({
-          'process.env.NODE_ENV': JSON.stringify('development')
+          'process.env.IS_PRODUCTION': JSON.stringify(false)
         }),
       ],
     }), webpack))

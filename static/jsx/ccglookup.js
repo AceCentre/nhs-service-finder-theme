@@ -25,8 +25,10 @@ function ondomready() {
     opt.innerHTML = service
     service_input.appendChild(opt)
   });
-  // autotest
-  ccg_lookup("ALL", "#e38000211");
+  if (!process.env.IS_PRODUCTION) {
+    // autotest
+    ccg_lookup("ALL", "#e38000211");
+  }
 }
 document.addEventListener("DOMContentLoaded", ondomready, false);
 
