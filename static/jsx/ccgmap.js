@@ -300,13 +300,15 @@ export default async function ccgmap (svg_elm, topojson_url, extra) {
     }));
     let popper_elm = tippy_inf.tooltips[0].popper;
     popper_elm.addEventListener("mouseover", (evt) => {
-      let hover_inf = hover_inf_list.find((a) => a.obj == obj);
-      if (hover_inf) {
-        if (hover_inf.hide_timeout != null) {
-          clearTimeout(hover_inf.hide_timeout);
-          hover_inf.hide_timeout = null;
+      if (!opened_inf) {
+        let hover_inf = hover_inf_list.find((a) => a.obj == obj);
+        if (hover_inf) {
+          if (hover_inf.hide_timeout != null) {
+            clearTimeout(hover_inf.hide_timeout);
+            hover_inf.hide_timeout = null;
+          }
+          hover_inf.tippy_inf.tooltips.forEach((a) => a.show());
         }
-        hover_inf.tippy_inf.tooltips.forEach((a) => a.show());
       }
     }, false);
     popper_elm.addEventListener("mouseout", (evt) => {
