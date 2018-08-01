@@ -1,7 +1,7 @@
 import * as topojson from "topojson-client";
-import * as d3 from "d3";
+import * as d3 from "./d3custom";
 import tippy from "tippy.js";
-import {$get,$new} from "./util.js";
+import {$get,$new} from "./util";
 import _ from "lodash";
 
 let tippy_default_options = {

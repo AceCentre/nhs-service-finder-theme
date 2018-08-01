@@ -9,7 +9,22 @@ const sourcemaps = require('gulp-sourcemaps');
 const rename = require('gulp-rename');
 const path = require('path');
 
+let jsfiles = {};
+if (!('NO_MAIN' in process.env))
+  jsfiles.main = './static/jsx/main.js';
+if (!('NO_EMBED' in process.env))
+  jsfiles.ccglookup_embed = './static/jsx/ccglookup_embed.js';
+
+function wpdefine_options() {
+  return {
+    'process.env.IS_PRODUCTION': JSON.stringify(false),
+    'process.env.HOST_URL': JSON.stringify(process.env.HOST_URL||"")
+  };
+}
+
 let webpackConfig = {
+  entry: jsfiles,
+  performance: { hints: false },
   resolve: {
     modules: [ 'node_modules' ],
     alias: {
@@ -42,7 +57,7 @@ gulp.task('script-lint', function () {
 });
 
 gulp.task('build-script-prod', function () {
-  return gulp.src(['static/jsx/main.js'])
+  return gulp.src('.')
     .pipe(webpackst(Object.assign({}, webpackConfig, {
       output: {
         filename: '[name].min.js',
@@ -50,9 +65,7 @@ gulp.task('build-script-prod', function () {
       mode: 'production',
       devtool: 'source-map',
       plugins: [
-        new webpack.DefinePlugin({
-          'process.env.IS_PRODUCTION': JSON.stringify(true)
-        }),
+        new webpack.DefinePlugin(wpdefine_options()),
         new UglifyJsPlugin({
           exclude: /min\.js$/,
           sourceMap: true,
@@ -63,7 +76,7 @@ gulp.task('build-script-prod', function () {
 });
 
 gulp.task('build-script-dev', function () {
-  return gulp.src(['static/jsx/main.js'])
+  return gulp.src('.')
     .pipe(webpackst(Object.assign({}, webpackConfig, {
       output: {
         filename: '[name].js',
@@ -71,9 +84,7 @@ gulp.task('build-script-dev', function () {
       mode: 'development',
       devtool: 'source-map',
       plugins: [
-        new webpack.DefinePlugin({
-          'process.env.IS_PRODUCTION': JSON.stringify(false)
-        }),
+        new webpack.DefinePlugin(wpdefine_options()),
       ],
     }), webpack))
     .pipe(gulp.dest('static/jsbundle/'));
@@ -99,7 +110,7 @@ gulp.task('sass-prod', function () {
 });
 
 gulp.task('build-script-dev:watch', function () {
-  return gulp.src(['static/jsx/main.js'])
+  return gulp.src('.')
     .pipe(webpackst(Object.assign({}, webpackConfig, {
       watch: true,
       output: {
@@ -108,9 +119,7 @@ gulp.task('build-script-dev:watch', function () {
       mode: 'development',
       devtool: 'source-map',
       plugins: [
-        new webpack.DefinePlugin({
-          'process.env.IS_PRODUCTION': JSON.stringify(false)
-        }),
+        new webpack.DefinePlugin(wpdefine_options()),
       ],
     }), webpack))
     .pipe(gulp.dest('static/jsbundle/'));

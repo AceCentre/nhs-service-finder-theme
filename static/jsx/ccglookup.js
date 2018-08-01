@@ -1,68 +1,93 @@
 import _ from "lodash";
-import {auto_ccgmap1} from "./ccgmap.js";
-import {$get,$new} from "./util.js";
+import {auto_ccgmap1} from "./ccgmap";
+import {$get,$new,http_get} from "./util";
+import strformat from "string-format";
 
-let service_options = [ "ALL", "AAC", "EC", "WCS" ]
-let get_postcode_url_prefix = '//api.postcodes.io/postcodes/'
-let ccgtopo_url = "/data/ccg.topojson";
-let ccgmap_cache = {};
-let ccgmap_ccg_list;
-let ccgmap_all_url = "/ccgmap/all/rawdata.json";
+export let ccgmap_cache = {};
+export let ccgmap_ccg_list;
 
-function ondomready() {
+export async function ccg_lookup_auto (extra) {
+  let ccglookup_elm = $get("ccglookup");
+  let ccglookup_elm_data = {};
+  for (let att of ccglookup_elm.attributes) {
+    if (att.name.indexOf("data-") == 0) {
+      let name = att.name.substr("data-".length);
+      if (name) {
+        ccglookup_elm_data[name] = att.value;
+      }
+    }
+  }
+  if (!ccglookup_elm) {
+    console.info("ccglookup terminate, Could not find #ccglookup")
+    return false;
+  }
+  if (ccglookup_elm.hasAttribute("data-inject")) {
+    let ccglookup_template_elm = $get("ccglookup-template");
+    if (!ccglookup_template_elm) {
+      if (!extra.ccglookup_template_url)
+        throw new Error("Could not look for ccglookup template, Maybe I'm not loaded with ccglookup_embed.js");
+      let templates_div = $new("div");
+      templates_div.innerHTML = await http_get(extra.ccglookup_template_url);
+      ccglookup_elm.appendChild(templates_div);
+      ccglookup_template_elm = $get("ccglookup-template");
+      if (!ccglookup_template_elm) {
+        throw new Error("ccglookup template has no #ccglookup-template");
+      }
+      // wrapping the template content in another inner div will save templates_div 
+      let inner_elm = $new("div");
+      inner_elm.classList.add("ccglookup-inner");
+      inner_elm.innerHTML = _.template(ccglookup_template_elm.innerHTML)(ccglookup_elm_data);
+      ccglookup_elm.appendChild(inner_elm);
+      // load item template if any exists
+      if (extra.item_templates) {
+        for (let telm of templates_div.getElementsByClassName("ccglookup-item-template")) {
+          let tplname = telm.getAttribute("data-name");
+          if (tplname) {
+            extra.item_templates[tplname] = _.template(telm.innerHTML);
+          }
+        }
+      }
+    }
+  }
   let lookup_form = $get("ccg-lookup-form")
-  if(!lookup_form) {
-    console.info("ccg-lookup terminate, Could not find #ccg-lookup-form")
-    return;
+  if (lookup_form) {
+    lookup_form.addEventListener("submit", lookup_form_submit_bind(extra), false);
   }
-  lookup_form.addEventListener("submit", lookup_form_submit, false);
-  let service_input = $get("ccg-service-input")
-  if(!service_input)
-    throw new Error("Could not find service or postcode inputs for ccg");
-  _.each(service_options, (service) => {
-    let opt = $new("option")
-    opt.value = service
-    opt.innerHTML = service
-    service_input.appendChild(opt)
-  });
-  if (!process.env.IS_PRODUCTION) {
-    // autotest
-    ccg_lookup("ALL", "#e38000211");
-  }
+  return true;
 }
-document.addEventListener("DOMContentLoaded", ondomready, false);
 
-function lookup_form_submit(evt) {
-  evt.preventDefault()
-  new Promise((resolve, reject) => {
-    let service_input = $get("ccg-service-input")
-    let postcode_input = $get("ccg-postcode-input")
-    if(!service_input || !postcode_input)
-      throw new Error("Could not find service or postcode inputs for ccg");
-    let service = _.find(service_options, (a) => a == service_input.value)
-    if(!service)
-      throw new Error("Could not find service of name: "+ service_input.value);
-    if(!postcode_input.value) {
-      throw new Error("Please write a postcode")
-    }
-    if(!postcode_input.value.match(/^[A-Z]{1,2}[0-9][0-9A-Z]?\s?[0-9][A-Z]{2}$/i) && postcode_input.value[0] != "#") { // hashtag is special case for debugging
-      throw new Error("Input postcode do not match uk postcode standard")
-    }
-    
-    ccg_lookup(service, postcode_input.value)
-      .then(resolve, reject)
-  })
-    .catch((err) => {
-      console.error(err);
-      alert(err.message || err+"")
-    });
+export function lookup_form_submit_bind(extra) {
+  return (evt) => {
+    evt.preventDefault()
+    new Promise((resolve, reject) => {
+      let service_input = $get("ccg-service-input")
+      let postcode_input = $get("ccg-postcode-input")
+      if(!service_input || !postcode_input)
+        throw new Error("Could not find service or postcode inputs for ccg");
+      let service = service_input.value || "ALL";
+      if(!postcode_input.value) {
+        throw new Error("Please write a postcode")
+      }
+      if(!postcode_input.value.match(/^[A-Z]{1,2}[0-9][0-9A-Z]?\s?[0-9][A-Z]{2}$/i) && postcode_input.value[0] != "#") { // hashtag is special case for debugging
+        throw new Error("Input postcode do not match uk postcode standard")
+      }
+      ccg_lookup(service, postcode_input.value, extra)
+        .then(resolve, reject)
+    })
+      .catch((err) => {
+        console.error(err);
+        alert(err.message || err+"")
+      });
+  };
 }
 
 let ccg_lookup_clear = function() { }
 
-async function ccg_lookup(service, postcode) {
+export async function ccg_lookup(service, postcode, extra) {
+  let {get_postcode_url_prefix, ccgtopo_url, ccgmap_all_url,
+       ccgcode_taxonomy_data_url, ccgtemplate_url} = extra;
   ccg_lookup_clear();
-  if (!ccgmap_ccg_list) {
+  if (!ccgmap_ccg_list && ccgmap_all_url) {
     try {
       let res = JSON.parse(await http_get(ccgmap_all_url));
       ccgmap_ccg_list = res.items ? res.items : [];
@@ -92,10 +117,11 @@ async function ccg_lookup(service, postcode) {
       throw new Error("Could not lookup for ccg-code for the input postal code");
     }
   }
+  ccgcode = ccgcode.toLowerCase();
   // load the list of postcodes
   try {
     result_el = $get("ccg-lookup-result");
-    data = JSON.parse(await http_get("/ccgcodes/" + ccgcode.toLowerCase() + "/rawdata.json"));
+    data = JSON.parse(await http_get(strformat(ccgcode_taxonomy_data_url, ccgcode)));
     if (!data.items || data.items.length == 0) {
       result_el.innerHTML = "No result found for ccgcode, " + ccgcode;
       return;
@@ -114,7 +140,7 @@ async function ccg_lookup(service, postcode) {
       }
     }
   }
-  let tpls = {};
+  let tpls = extra.item_templates||{};
   let promises = [];
   // fetch templates
   for (let item of data.items) {
@@ -123,11 +149,11 @@ async function ccg_lookup(service, postcode) {
       if (tplname.indexOf("/") != -1) {
         throw new Error("template name should not contain slash, " + tplname);
       }
-      tpls[tplname] = { name: tplname };
+      tpls[tplname] = true;
       promises.push(
-        http_get("/ccgtemplate/" + tplname)
+        http_get(strformat(ccgtemplate_url, tplname))
           .then((res) => {
-            return tpls[tplname].template = _.template(res);
+            return tpls[tplname] = _.template(res);
           })
       );
     }
@@ -140,42 +166,27 @@ async function ccg_lookup(service, postcode) {
     let tpl = tpls[tplname];
     let ielm = $new("div");
     ielm.classList.add("ccg-item");
-    ielm.innerHTML = tpl.template(item);
+    ielm.innerHTML = tpl(item);
     result_el.appendChild(ielm);
   }
-  let extra = {
-    ccg_list: ccgmap_ccg_list,
-    cache: ccgmap_cache, zoom: 3,
-    ccg_lookup, input_service: service, input_postcode: postcode,
-    highlight_ccgcode: ccgcode.toLowerCase(), 
-  };
-  if (postcode_res) {
-    extra.highlight_points = [ {
-      pos: [ postcode_res.longitude, postcode_res.latitude ]
-    } ];
-  }
-  let ccgmap_inf = await auto_ccgmap1(ccgtopo_url, extra);
-  ccg_lookup_clear = function () {
-    ccgmap_inf.destroy();
-  };
-}
-
-function http_get(url) {
-  return new Promise((resolve, reject) => {
-    let xhr = new XMLHttpRequest()
-    xhr.open("GET", url)
-    xhr.onreadystatechange = function () {
-      if(xhr.readyState === 4) {
-        if(xhr.status === 200) {
-          resolve(xhr.responseText)
-        } else {
-          let err = new Error(xhr.status + " " + xhr.statusText);
-          err.xhr = xhr
-          reject(err)
-        }
-      }
+  let ccgmap_inf;
+  if (ccgtopo_url) {
+    let map_extra = {
+      ccg_list: ccgmap_ccg_list || data.items,
+      cache: ccgmap_cache, zoom: 3,
+      ccg_lookup, input_service: service, input_postcode: postcode,
+      highlight_ccgcode: ccgcode, 
     };
-    xhr.send()
-  });
+    if (postcode_res) {
+      map_extra.highlight_points = [ {
+        pos: [ postcode_res.longitude, postcode_res.latitude ]
+      } ];
+    }
+    ccgmap_inf = await auto_ccgmap1(ccgtopo_url, map_extra);
+  }
+  ccg_lookup_clear = function () {
+    if (ccgmap_inf)
+      ccgmap_inf.destroy();
+  };
 }
 

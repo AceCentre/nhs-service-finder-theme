@@ -1,3 +1,6 @@
+{{- if and (isset .Params "main_partial") -}}
+  {{- partial .Params.main_partial . -}}
+{{- else -}}
 {{ partial "head.html" . }}
 {{ partial "header.html" . }}
   <section>
@@ -13,3 +16,4 @@
   </section>
 {{ partial "footer.html" . }}
 {{ partial "foot.html" . }}
+{{- end -}}

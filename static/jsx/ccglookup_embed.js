@@ -1,17 +1,16 @@
 import "./compat";
-import $ from "jquery";
-import Foundation from 'foundation-sites';
 import {ccg_lookup, ccg_lookup_auto} from "./ccglookup";
 import {get_postcode_url_prefix, ccgtopo_path, ccgmap_all_path,
-        ccgcode_taxonomy_data_path, ccgtemplate_path} from "./config";
+        ccgcode_taxonomy_data_path, ccgtemplate_path,
+        ccglookup_template_path} from "./config";
 
-window.$ = $
-window.Foundation = Foundation
-
+let host_url = process.env.HOST_URL;
 let ccglookup_extra = {
-  get_postcode_url_prefix, ccgtopo_url: ccgtopo_path,
-  ccgmap_all_url: ccgmap_all_path, ccgtemplate_url: ccgtemplate_path,
-  ccgcode_taxonomy_data_url: ccgcode_taxonomy_data_path,
+  get_postcode_url_prefix, ccgtopo_url: host_url + ccgtopo_path,
+  ccgmap_all_url: host_url + ccgmap_all_path,
+  ccgtemplate_url: host_url + ccgtemplate_path,
+  ccgcode_taxonomy_data_url: host_url + ccgcode_taxonomy_data_path,
+  ccglookup_template_url: host_url + ccglookup_template_path,
   item_templates: {}
 };
 
