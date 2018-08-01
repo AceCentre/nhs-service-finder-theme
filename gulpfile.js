@@ -15,9 +15,9 @@ if (!('NO_MAIN' in process.env))
 if (!('NO_EMBED' in process.env))
   jsfiles.ccglookup_embed = './static/jsx/ccglookup_embed.js';
 
-function wpdefine_options() {
+function wpdefine_options(is_production) {
   return {
-    'process.env.IS_PRODUCTION': JSON.stringify(false),
+    'process.env.IS_PRODUCTION': JSON.stringify(is_production),
     'process.env.HOST_URL': JSON.stringify(process.env.HOST_URL||"")
   };
 }
@@ -65,7 +65,7 @@ gulp.task('build-script-prod', function () {
       mode: 'production',
       devtool: 'source-map',
       plugins: [
-        new webpack.DefinePlugin(wpdefine_options()),
+        new webpack.DefinePlugin(wpdefine_options(true)),
         new UglifyJsPlugin({
           exclude: /min\.js$/,
           sourceMap: true,
@@ -84,7 +84,7 @@ gulp.task('build-script-dev', function () {
       mode: 'development',
       devtool: 'source-map',
       plugins: [
-        new webpack.DefinePlugin(wpdefine_options()),
+        new webpack.DefinePlugin(wpdefine_options(false)),
       ],
     }), webpack))
     .pipe(gulp.dest('static/jsbundle/'));
@@ -99,7 +99,7 @@ gulp.task('sass-dev', function () {
 });
 
 gulp.task('sass-prod', function () {
-  return gulp.src('static/sass/style.scss')
+  return gulp.src('static/sass/**/*.scss')
     .pipe(sourcemaps.init())
     .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
     .pipe(rename(function (path) {
@@ -119,7 +119,7 @@ gulp.task('build-script-dev:watch', function () {
       mode: 'development',
       devtool: 'source-map',
       plugins: [
-        new webpack.DefinePlugin(wpdefine_options()),
+        new webpack.DefinePlugin(wpdefine_options(false)),
       ],
     }), webpack))
     .pipe(gulp.dest('static/jsbundle/'));
