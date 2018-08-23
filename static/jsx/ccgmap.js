@@ -66,6 +66,7 @@ export async function auto_ccgmap1 (ccgtopo_url, extra) {
     let w = mapsvg.parentNode.offsetWidth || 320, h = w / map_ratio
     mapsvg.setAttribute("width", w);
     mapsvg.setAttribute("height", h);
+    mapsvg.setAttribute("preserveAspectRatio", "xMidYMid meet");
   }
 }
 

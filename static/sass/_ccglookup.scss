@@ -76,9 +76,12 @@ $form-text-padding: 5px;
     text-align: left;
   }
 }
-
 #ccg-map-svg {
   max-width: 100%;
-  height: auto;
+}
+.--ua-nonie {
+  #ccg-map-svg {
+    height: auto;
+  }
 }
 

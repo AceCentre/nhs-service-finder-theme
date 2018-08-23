@@ -6,6 +6,13 @@ import strformat from "string-format";
 export let ccgmap_cache = {};
 export let ccgmap_ccg_list;
 
+var isBrowser = typeof window != 'undefined';
+var isIE = isBrowser && /MSIE |Trident\//.test(navigator.userAgent);
+/*
+var isIE11 = isBrowser$1 && !!(window.MSInputMethodContext && document.documentMode);
+var isIE10 = isBrowser$1 && /MSIE 10/.test(navigator.userAgent);
+*/
+
 export async function ccg_lookup_auto (extra) {
   let ccglookup_elm = $get("ccglookup");
   let ccglookup_elm_data = {};
@@ -20,6 +27,11 @@ export async function ccg_lookup_auto (extra) {
   if (!ccglookup_elm) {
     console.info("ccglookup terminate, Could not find #ccglookup")
     return false;
+  }
+  if (isIE) {
+    ccglookup_elm.classList.add('--ua-ie');
+  } else {
+    ccglookup_elm.classList.add('--ua-nonie');
   }
   if (ccglookup_elm.hasAttribute("data-inject")) {
     let ccglookup_template_elm = $get("ccglookup-template");

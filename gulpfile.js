@@ -130,7 +130,7 @@ gulp.task('sass-dev:watch', function () {
   gulp.watch('static/sass/**/*.scss', gulp.series('sass-dev'));
 });
 
-gulp.task('dev', gulp.parallel('sass-dev:watch', 'build-script-dev:watch'));
+gulp.task('dev', gulp.series('sass-dev', gulp.parallel('sass-dev:watch', 'build-script-dev:watch')));
 
 gulp.task('build-prod', gulp.series(/*'script-lint', */'build-script-prod', 'sass-prod'));
 gulp.task('build-dev', gulp.series(/*'script-lint', */'build-script-dev', 'sass-dev'));
