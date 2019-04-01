@@ -279,6 +279,8 @@ export default async function ccgmap (svg_elm, topojson_url, extra) {
       if (extra.input_service && extra.input_service != 'ALL') {
         obj.ccg_list = obj.ccg_list.filter((a)=>a.ccgservices.indexOf(extra.input_service.toLowerCase()) != -1)
       }
+    } else if (!obj.ccg_list) {
+      obj.ccg_list = [];
     }
   }
   function make_obj_tippy  (elm, obj) {
