@@ -19,12 +19,12 @@
 @import "global/accessibility";
 
 // Third-party libraries
-$fa-font-path: "../components/fontawesome/web-fonts-with-css/webfonts";
-@import '../components/fontawesome/web-fonts-with-css/scss/fontawesome';
-@import '../components/fontawesome/web-fonts-with-css/scss/brands';
-@import '../components/fontawesome/web-fonts-with-css/scss/regular';
-@import '../components/fontawesome/web-fonts-with-css/scss/solid';
-@import '../components/fontawesome/web-fonts-with-css/scss/v4-shims';
+$fa-font-path: "../components/fontawesome/webfonts";
+@import '../components/fontawesome/scss/fontawesome';
+@import '../components/fontawesome/scss/brands';
+@import '../components/fontawesome/scss/regular';
+@import '../components/fontawesome/scss/solid';
+@import '../components/fontawesome/scss/v4-shims';
 // @import 'motion-ui/motion-ui';
 
 // Foundation global styles
