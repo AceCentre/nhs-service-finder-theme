@@ -272,8 +272,17 @@ export default async function ccgmap (svg_elm, topojson_url, extra) {
     });
   }
   function init_obj_extra (obj) {
-    if (!obj.ccg_list && obj.properties.ccg16cd) {
-      let ccgcode = (obj.properties.ccg16cd+"").toLowerCase()
+    // collect all ccgxxcd/nm to ccgcd/nm
+    ["17","16"].forEach((a) => {
+      if (!obj.properties.ccgcd && !!obj.properties["ccg" + a + "cd"]) {
+        obj.properties.ccgcd = obj.properties["ccg" + a + "cd"];
+      }
+      if (!obj.properties.ccgnm && !!obj.properties["ccg" + a + "nm"]) {
+        obj.properties.ccgnm = obj.properties["ccg" + a + "nm"];
+      }
+    });
+    if (!obj.ccg_list && obj.properties.ccgcd) {
+      let ccgcode = (obj.properties.ccgcd+"").toLowerCase()
       obj.ccgcode = ccgcode;
       obj.ccg_list = ccg_list.filter((a) => (a.ccgcodes||[]).indexOf(ccgcode) != -1);
       if (extra.input_service && extra.input_service != 'ALL') {
